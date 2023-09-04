@@ -16,11 +16,14 @@ class RedisClient {
   }
 
   async get(key) {
-    await this.redisClient.get(key, (err, value) => {
-      if (err) {
-        return null;
-      }
-      return value;
+    return new Promise((resolve, reject) => {
+      this.redisClient.get(key, (err, value) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(value);
+        }
+      });
     });
   }
 
