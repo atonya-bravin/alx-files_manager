@@ -16,7 +16,7 @@ class RedisClient {
   }
 
   async get(key) {
-    this.redisClient.get(key, (err, value) => {
+    await this.redisClient.get(key, (err, value) => {
       if (err) {
         return null;
       }
