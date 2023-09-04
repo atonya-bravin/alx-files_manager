@@ -10,7 +10,10 @@ class RedisClient {
   }
 
   isAlive() {
-    return this.redisClient.status === 'ready';
+    this.redisClient.on('connect', () => {
+      return true;
+    });
+    return false;
   }
 
   async get(key) {
