@@ -2,7 +2,7 @@ const redis = require('redis');
 
 class RedisClient {
   constructor(options) {
-    this.redisClient = new redis.createClient(options);
+    this.redisClient = redis.createClient(options);
     this.isConnected = true;
 
     this.redisClient.on('error', (err) => {
