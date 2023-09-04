@@ -10,8 +10,8 @@ class RedisClient {
   }
 
   isAlive() {
-    this.redisClient.on('connect', () => {
-      return true;
+    this.redisClient.ping('connect', () => {
+      return false;
     });
     return false;
   }
