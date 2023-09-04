@@ -16,7 +16,12 @@ class RedisClient {
   }
 
   async get(key) {
-    return this.redisClient.get(key);
+    this.redisClient.get(key, (err, value) => {
+      if (err) {
+        return null;
+      }
+      return value;
+    });
   }
 
   async set(key, value, duration) {
