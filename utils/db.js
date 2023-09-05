@@ -11,7 +11,7 @@ class DBClient {
 
     // Create a new MongoClient
     this.client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
-
+    
     this.isConnected = false;
     this.client.connect((err) => {
       if (!err) {
@@ -23,6 +23,18 @@ class DBClient {
 
   isAlive() {
     return this.isConnected;
+  }
+
+  async nbUsers() {
+    this.db = this.client.db(`${this.database}`);
+    const collection = this.db.collection('users');
+    return collection.countDocuments(); 
+  }
+
+  async nbFiles() {
+    this.db = this.client.db(`${this.database}`);
+    const collection = this.db.collection('files');
+    return collection.countDocuments();
   }
 }
 
