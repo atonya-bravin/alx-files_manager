@@ -1,42 +1,39 @@
-const { MongoClient } = require('mongodb');
+import { MongoClient } from 'mongodb';
 
 class DBClient {
   constructor() {
-    const host = process.env.DB_HOST || 'localhost';
-    const port = process.env.DB_PORT || 27017;
-    const database = process.env.DB_DATABASE || 'files_manager';
-
-    // Connection URL for MongoDB
-    const url = `mongodb://${host}:${port}/${database}`;
-
-    // Create a new MongoClient
-    this.client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
-
-    this.isConnected = false;
-    this.client.connect((err) => {
-      if (!err) {
-        this.isConnected = true;
-        this.db = this.client.db(database);
-      }
+    this.host = process.env.DB_HOST || 'localhost';
+    this.port = process.env.DB_PORT || 27017;
+    this.database = process.env.DB_DATABASE || 'files_manager';
+    this.client = new MongoClient(`mongodb://${this.host}:${this.port}`, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
     });
+    this.client.connect();
+    this.db = this.client.db(this.database);
   }
 
   isAlive() {
-    return this.isConnected;
+    return !!this.client && this.client.isConnected();
   }
 
   async nbUsers() {
-    this.db = this.client.db(`${this.database}`);
-    const collection = this.db.collection('users');
-    return collection.countDocuments();
+    if (!this.isAlive()) return 0;
+
+    const usersCollection = this.db.collection('users');
+    const numberOfUsers = await usersCollection.countDocuments();
+    return numberOfUsers;
   }
 
   async nbFiles() {
-    this.db = this.client.db(`${this.database}`);
-    const collection = this.db.collection('files');
-    return collection.countDocuments();
+    if (!this.isAlive()) return 0;
+
+    const filesCollection = this.db.collection('files');
+    const numberOfFiles = await filesCollection.countDocuments();
+    return numberOfFiles;
   }
 }
 
-export default new DBClient();
-export { DBClient as dbClient };
+const dbClient = new DBClient();
+
+export default dbClient;
