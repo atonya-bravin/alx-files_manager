@@ -1,10 +1,10 @@
 import express from 'express';
-import routes from './routes/index.js';
+import routes from './routes/index';
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-//middleware to parse JSON request bodies,
+// middleware to parse JSON request bodies,
 app.use(express.json());
 
 app.use('/', routes);
